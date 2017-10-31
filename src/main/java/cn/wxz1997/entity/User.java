@@ -1,53 +1,85 @@
 package cn.wxz1997.entity;
 
-public class User {
-    private Integer id;
-    private String username;
-    private String password;
-    private String role;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
-    public User() {
-    }
+/**
+ *
+ * 用户
+ *
+ */
+public class User implements Serializable {
 
-    public Integer getId() {
-        return id;
-    }
+	private static final long serialVersionUID = 1L;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	/** 主键id */
+	private Long id;
 
-    public String getUsername() {
-        return username;
-    }
+	/** 用户名 */
+	private String username;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	/** 密码 */
+	private String password;
 
-    public String getPassword() {
-        return password;
-    }
+	/** 用户状态 */
+	private Integer status;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	/** 创建时间 */
+	private Date createTime;
 
-    public String getRole() {
-        return role;
-    }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+	public User() {
+	}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", status=" + status +
+				", createTime=" + createTime +
+				'}';
+	}
 }

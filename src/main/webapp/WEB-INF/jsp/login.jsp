@@ -13,8 +13,15 @@
 <body>
     <div>login</div>
     <form action="user/login" method="post">
-        用户名：<input type="text" id="username" name="username"><br>
-        密码：<input type="password" id="password" name="password"><br>
+        <P>
+            <input id="username" type="text" name="username" placeholder="请输入登录名"/>
+        </P>
+        <P>
+            <input id="password" type="password" name="password" placeholder="请输入密码"/>
+        </P>
+        <P>
+            <input class="rememberMe" type="checkbox" name="rememberMe"/> 记住密码
+        </P>
         <input type="submit" value="登录">
     </form>
 </body>

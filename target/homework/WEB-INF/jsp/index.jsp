@@ -13,10 +13,14 @@
 <body>
     登录成功
     <br>
-    <a href="admin">Admin page</a>
+    <a href="/myshiro/admin">Admin page</a>
     <br>
-    <a href="user">User page</a>
+    <a href="/myshiro/user">User page</a>
     <<br>
-    <a href="logout">注销</a>
+    <a href="/myshiro/test">Test page</a>
+    <<br>
+    <a href="/myshiro/first">菜单页面</a>
+    <<br>
+    <a href="/myshiro/user/logout">注销</a>
 </body>
 </html>

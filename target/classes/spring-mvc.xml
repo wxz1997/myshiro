@@ -40,4 +40,16 @@
         <property name="maxInMemorySize" value="40960" />
     </bean>
 
+    <!--为了开启Shiro注解，必须在spring-mvc.xml中配置，在其他配置文件中不生效-->
+    <!--3.必须要有这样的实例管理spring中shiro常见对象
+       可以自动的调用在spring Ioc容器中shiro bean的生命周期的方法
+   -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <!--4.启用shiro注解， 前提是有配置3-->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
 </beans>

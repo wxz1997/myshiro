@@ -3,13 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                             http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
                             http://www.springframework.org/schema/context    
                             http://www.springframework.org/schema/context/spring-context-4.3.xsd
                             http://www.springframework.org/schema/mvc    
-                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     <!-- 自动扫描 -->
     <context:component-scan base-package="cn.wxz1997" />
     <!-- 引入配置文件 -->
@@ -69,13 +69,26 @@
         <!--配置认证器和授权器-->
         <property name="authenticator" ref="authenticator"/>
         <property name="authorizer" ref="authorizer"/>
-        <!--
-        配置rememeberMeManager
-        配置过期时间，单位是秒
-        <property name="rememberMeManager.cookie.maxAge" value="10"/>
-        -->
-
+        <!--配置rememeberMeManager-->
+        <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
+
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/><!-- 配置过期时间，单位是秒（30天） -->
+    </bean>
+
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <!--
+        rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度（128 256 512 位）
+        <property name="cipherKey"
+                  value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+        -->
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
     <!--认证器-->
     <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
         <!--多realm-->
@@ -109,7 +122,7 @@
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
     </bean>
     <!--2.自定义realm-->
-    <bean id="userRealm" class="cn.wxz1997.realm.UserRealm">
+    <bean id="userRealm" class="cn.wxz1997.shiro.realm.UserRealm">
         <!--配置凭证匹配器：credentialsMatcher,进行加密-->
         <property name="credentialsMatcher">
             <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
@@ -120,8 +133,8 @@
             </bean>
         </property>
     </bean>
-    <bean id="userRealm2" class="cn.wxz1997.realm.UserRealm2">
-        <!--进行加密-->
+    <bean id="userRealm2" class="cn.wxz1997.shiro.realm.UserRealm">
+        <!--配置凭证匹配器：credentialsMatcher,进行加密-->
         <property name="credentialsMatcher">
             <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
                 <!--加密算法-->
@@ -131,16 +144,7 @@
             </bean>
         </property>
     </bean>
-    <!--3.必须要有这样的实例管理spring中shiro常见对象
-        可以自动的调用在spring Ioc容器中shiro bean的生命周期的方法
-    -->
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
-    <!--4.启用shiro注解， 前提是有配置3-->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-          depends-on="lifecycleBeanPostProcessor"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
-    </bean>
+    <!--3.4转移到spring-mvc中-->
     <!--5.网络方面-->
     <bean id="secureRemoteInvocationExecutor" class="org.apache.shiro.spring.remoting.SecureRemoteInvocationExecutor">
         <property name="securityManager" ref="securityManager"/>
@@ -153,6 +157,7 @@
         <property name="loginUrl" value="/login"/>
         <property name="successUrl"  value="/index"/>
         <property name="unauthorizedUrl" value="/unauthorized"/>
+
         <!--配置拦截器链(utl采取匹配第一个出现的拦截器)-->
         <property name="filterChainDefinitions">
             <value>
